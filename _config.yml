@@ -1,5 +1,5 @@
-title: Hacker theme
-description: Hacker is a theme for GitHub Pages.
-show_downloads: true
+title: Robert Hoyt's AI Powered Cybersecuity Homelab Project 
+description: This project transforms my cybersecurtity homelab into an autommated AI-powered voice assisted SOC
+show_downloads: false
 google_analytics:
 theme: jekyll-theme-hacker
