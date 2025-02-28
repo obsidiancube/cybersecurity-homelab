@@ -1,0 +1,3 @@
+[submodule "mistral_7b_finetuned"]
+    path = mistral_7b_finetuned
+    url = https://huggingface.co/nsvot/mistral_7b_finetuned
