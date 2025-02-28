@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 import requests
 from gtts import gTTS
 import os
@@ -6,12 +6,8 @@ import os
 app = FastAPI()
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
-@app.post("/query")
-async def query_ai(request: Request):
-    # Read raw JSON body
-    body = await request.json()
-    prompt = body.get("prompt")
-
+@app.get("/query")
+async def query_ai(prompt: str):
     if not prompt:
         return {"error": "Prompt field is required"}
 
