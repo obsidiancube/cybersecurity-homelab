@@ -1,19 +1,19 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, Request
 import requests
 from gtts import gTTS
 import os
-
-# Define a request body model
-class QueryRequest(BaseModel):
-    prompt: str
 
 app = FastAPI()
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 @app.post("/query")
-def query_ai(request: QueryRequest):
-    prompt = request.prompt  # Access the prompt from the request body
+async def query_ai(request: Request):
+    # Read raw JSON body
+    body = await request.json()
+    prompt = body.get("prompt")
+
+    if not prompt:
+        return {"error": "Prompt field is required"}
 
     payload = {
         "model": "llama3",
@@ -21,18 +21,16 @@ def query_ai(request: QueryRequest):
         "stream": False
     }
 
-    # Make the request to the external API
     response = requests.post(OLLAMA_URL, json=payload)
-
-    # Extract the response text from the external API response
+    
+    # Assuming the external API responds with a "response" key
     response_text = response.json().get("response", "")
-
-    # Convert the response text to speech with gTTS
+    
+    # Convert to speech with gTTS
     tts = gTTS(text=response_text, lang='en')
     tts.save("response.mp3")
     os.system("mpg123 response.mp3")  # Play audio (install mpg123: sudo apt install mpg123)
     
-    # Return the text response as JSON
     return {"response": response_text}
 
 if __name__ == "__main__":
