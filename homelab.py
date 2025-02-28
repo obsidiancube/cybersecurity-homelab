@@ -4,28 +4,25 @@ from gtts import gTTS
 import os
 
 app = FastAPI()
-tts = Piper(model="en_US-medium")
-
-# Ollama API endpoint (adjust if running on a different server)
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 @app.post("/query")
 def query_ai(prompt: str):
-    # Send prompt to Ollama
     payload = {
-        "model": "llama3",  # Change to your preferred Ollama model
+        "model": "llama3",
         "prompt": prompt,
         "stream": False
     }
     response = requests.post(OLLAMA_URL, json=payload)
     response_text = response.json()["response"]
     
-    # Convert AI response to speech
-    tts.speak(response_text)
+    # Convert to speech with gTTS
+    tts = gTTS(text=response_text, lang='en')
+    tts.save("response.mp3")
+    os.system("mpg123 response.mp3")  # Play audio (install mpg123: sudo apt install mpg123)
     
     return {"response": response_text}
 
-# Run the AI assistant API
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8081)
