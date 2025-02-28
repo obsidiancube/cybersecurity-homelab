@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import requests
-from piper import Piper
+from gtts import gTTS
+import os
 
 app = FastAPI()
 tts = Piper(model="en_US-medium")
